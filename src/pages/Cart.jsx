@@ -22,7 +22,6 @@ const Cart = () => {
   return (
     <div className="relative overflow-x-auto sm:rounded-lg bg-white p-6 min-h-screen">
       <h1 className="text-2xl font-bold mb-6 px-4">Cart</h1>
-      <BreadcrumbsWithIcon />
       <div className="bg-white rounded-lg p-6">
         <h2 className="text-2xl font-bold mb-4">Giỏ hàng của bạn</h2>
         {cartItems.length === 0 ? (

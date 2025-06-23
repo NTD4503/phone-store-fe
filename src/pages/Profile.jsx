@@ -44,7 +44,6 @@ const Profile = () => {
   return (
     <div className="relative overflow-x-auto sm:rounded-lg bg-white p-6 min-h-screen">
       <h1 className="text-2xl font-bold mb-6 px-4">My Profile</h1>
-      <BreadcrumbsWithIcon />
 
       <div className="bg-white rounded-lg p-6 max-w-3xl mx-auto space-y-6">
         <div className="flex items-center space-x-6">
