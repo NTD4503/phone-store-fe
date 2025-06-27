@@ -34,7 +34,7 @@ const Header = ({ onMenuClick }) => {
   };
 
   return (
-    <div className="bg-cyan-200 w-full sticky top-0 z-50">
+    <div className="bg-cyan-200 w-full sticky top-0">
       <div className="px-6 py-2">
         <div className="flex items-center justify-between py-2">
           <a className="flex items-center" href="/">

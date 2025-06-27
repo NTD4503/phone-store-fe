@@ -39,11 +39,12 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, onToggleCollapse }) => {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
-    <div className={`border border-spacing-1 ${isCollapsed ? "w-20" : "w-64"}`}>
-      <aside
-        className="hidden md:block bg-white col-span-1 h-full p-4 transition-all duration-300 
-        shadow-lg"
-      >
+    <div
+      className={`border border-r-gray-500-1 ${
+        isCollapsed ? "w-20" : "w-64"
+      } transition-all duration-500`}
+    >
+      <aside className="hidden md:block bg-white col-span-1 h-full p-4 transition-all duration-300">
         <div className="flex items-center justify-between mb-4 px-2">
           {!isCollapsed ? (
             <h4 className="text-lg font-bold uppercase text-primary">Menu</h4>
@@ -53,7 +54,7 @@ const Sidebar = ({ isOpen, onClose, isCollapsed, onToggleCollapse }) => {
 
           <BiMenu
             onClick={onToggleCollapse}
-            className="cursor-pointer text-gray-700"
+            className="cursor-pointer"
             size="1.875rem"
             aria-label="Toggle sidebar"
           />

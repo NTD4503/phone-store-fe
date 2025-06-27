@@ -26,10 +26,10 @@ const DetailProduct = () => {
   if (!detailProduct) return <p>Đang tải dữ liệu...</p>;
 
   return (
-    <div className="relative overflow-x-auto sm:rounded-lg bg-white p-6 min-h-screen">
+    <div className="sm:rounded-lg bg-white p-6 h-full">
       <h1 className="text-2xl font-bold mb-6 px-4">Detail</h1>
       <BreadcrumbsWithIcon />
-      <div className="grid grid-cols-6 gap-8 min-h-screen">
+      <div className="grid grid-cols-6 gap-8">
         <div className="col-span-6 md:col-span-2">
           <div className="mb-4 ">
             <img
@@ -39,7 +39,11 @@ const DetailProduct = () => {
             />
           </div>
 
-          <div className="flex gap-2 overflow-x-auto">
+          <div
+            className={`flex gap-2 ${
+              detailProduct.images?.length > 1 ? "overflow-x-auto" : ""
+            }`}
+          >
             {detailProduct.images?.map((img, idx) => (
               <img
                 key={idx}

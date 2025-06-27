@@ -27,7 +27,7 @@ const Profile = () => {
 
   if (!token) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
+      <div className="h-full flex justify-center items-center">
         <p className="text-lg">Bạn chưa đăng nhập.</p>
       </div>
     );
@@ -35,14 +35,14 @@ const Profile = () => {
 
   if (!profile) {
     return (
-      <div className="min-h-screen flex justify-center items-center">
+      <div className="h-full flex justify-center items-center">
         <p className="text-lg">Đang tải thông tin...</p>
       </div>
     );
   }
 
   return (
-    <div className="relative overflow-x-auto sm:rounded-lg bg-white p-6 min-h-screen">
+    <div className="relative overflow-x-auto sm:rounded-lg bg-white p-6 h-full">
       <h1 className="text-2xl font-bold mb-6 px-4">My Profile</h1>
 
       <div className="bg-white rounded-lg p-6 max-w-3xl mx-auto space-y-6">

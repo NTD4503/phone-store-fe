@@ -13,9 +13,9 @@ const Main = () => {
   const closeSidebar = () => setIsSidebarOpen(false);
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
       <Header onMenuClick={openSidebar} />
-      <div className="flex min-h-screen">
+      <div className="flex flex-1 overflow-hidden">
         <Sidebar
           isCollapsed={isCollapsed}
           onToggleCollapse={toggleCollapse}
@@ -23,11 +23,11 @@ const Main = () => {
           onClose={closeSidebar}
         />
 
-        <main className="flex-1 transition-all duration-300">
+        <main className="flex-1 overflow-y-auto">
           <Outlet />
         </main>
       </div>
-    </>
+    </div>
   );
 };
 

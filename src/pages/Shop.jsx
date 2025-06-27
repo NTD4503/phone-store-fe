@@ -79,7 +79,6 @@ const Shop = () => {
 
     setFilteredProducts(filtered);
 
-    // Reset tìm kiếm trên danh sách đã lọc mới
     if (keyWord) {
       const searched = filtered.filter((item) =>
         item.title.toLowerCase().includes(keyWord.toLowerCase())
@@ -98,7 +97,7 @@ const Shop = () => {
   const pageCount = Math.ceil(searchedProducts.length / itemsPerPage);
 
   return (
-    <div className="relative overflow-x-auto sm:rounded-lg bg-white p-6 min-h-screen">
+    <div className="relative overflow-x-auto sm:rounded-lg bg-white p-6">
       <h1 className="text-2xl font-bold mb-6 px-4">Shop</h1>
       <BreadcrumbsWithIcon />
 

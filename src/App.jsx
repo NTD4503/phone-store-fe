@@ -15,6 +15,7 @@ import Cart from "./pages/Cart";
 import Test from "./pages/Test";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import PostList from "./pages/postList";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/test" element={<Test />} />
+          <Route path="/post" element={<PostList />} />
         </Route>
         <Route path="/login" element={<Auth />} />
       </Routes>

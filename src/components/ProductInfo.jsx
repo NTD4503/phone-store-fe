@@ -4,12 +4,12 @@ import { addToCart } from "../redux/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
-const RatingStars = ({ rating }) => {
+const RatingStars = React.memo(({ rating }) => {
   const stars = Array.from({ length: 5 }, (_, i) => (
-    <span key={i}>{i < Math.floor(rating) ? "⭐" : ""}</span>
+    <span key={i}>{i < Math.floor(rating) ? "⭐" : "☆"}</span>
   ));
   return <div className="text-yellow-500 text-2xl">{stars}</div>;
-};
+});
 
 const ProductInfo = ({
   product,
@@ -19,15 +19,19 @@ const ProductInfo = ({
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const addProductToCart = () => {
+    dispatch(addToCart(product));
+  };
+
   const handleAddToCart = (e) => {
     e.stopPropagation();
-    dispatch(addToCart(product));
+    addProductToCart();
     toast.success("Thêm vào giỏ thành công");
   };
 
   const handleBuyNow = (e) => {
     e.stopPropagation();
-    dispatch(addToCart(product));
+    addProductToCart();
     toast.success("Đã thêm vào giỏ");
     navigate("/cart");
   };
