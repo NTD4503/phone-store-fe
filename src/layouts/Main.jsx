@@ -1,34 +1,42 @@
 import { useState } from "react";
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import { BreadcrumbsWithIcon } from "../components/BeardScrumb";
 import { Outlet } from "react-router-dom";
+import Sidebar from "../components/Sidebar";
 
-const Main = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
+import { Layout, theme } from "antd";
+const { Content } = Layout;
+import Header from "../components/Header";
 
-  const toggleCollapse = () => setIsCollapsed((prev) => !prev);
-
-  const openSidebar = () => setIsSidebarOpen(true);
-  const closeSidebar = () => setIsSidebarOpen(false);
-
+const App = () => {
+  const {
+    token: { colorBgContainer, borderRadiusLG },
+  } = theme.useToken();
+  const [collapsed, setCollapsed] = useState(false);
   return (
-    <div className="flex flex-col h-screen">
-      <Header onMenuClick={openSidebar} />
-      <div className="flex flex-1 overflow-hidden">
-        <Sidebar
-          isCollapsed={isCollapsed}
-          onToggleCollapse={toggleCollapse}
-          isOpen={isSidebarOpen}
-          onClose={closeSidebar}
-        />
-
-        <main className="flex-1 overflow-y-auto">
-          <Outlet />
-        </main>
-      </div>
-    </div>
+    <Layout style={{ height: "100vh" }}>
+      <Header
+        style={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      ></Header>
+      <Layout>
+        <Sidebar collapsed={collapsed} setCollapsed={setCollapsed} />
+        <Layout style={{ padding: "0 24px" }}>
+          <BreadcrumbsWithIcon></BreadcrumbsWithIcon>
+          <Content
+            style={{
+              margin: 0,
+              minHeight: 280,
+              background: colorBgContainer,
+              borderRadius: borderRadiusLG,
+            }}
+          >
+            <Outlet />
+          </Content>
+        </Layout>
+      </Layout>
+    </Layout>
   );
 };
-
-export default Main;
+export default App;

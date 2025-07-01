@@ -3,6 +3,8 @@ import { fetchDetailProduct } from "../services/ProductService";
 import { useEffect, useState } from "react";
 import { BreadcrumbsWithIcon } from "../components/BeardScrumb";
 import ProductInfo from "../components/ProductInfo";
+import { Typography } from "antd";
+const { Title } = Typography;
 
 const DetailProduct = () => {
   const { id } = useParams();
@@ -27,8 +29,10 @@ const DetailProduct = () => {
 
   return (
     <div className="sm:rounded-lg bg-white p-6 h-full">
-      <h1 className="text-2xl font-bold mb-6 px-4">Detail</h1>
-      <BreadcrumbsWithIcon />
+      <Title level={2} className="mb-4">
+        Chi tiết sản phẩm
+      </Title>
+
       <div className="grid grid-cols-6 gap-8">
         <div className="col-span-6 md:col-span-2">
           <div className="mb-4 ">

@@ -5,88 +5,79 @@ import { useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 import { toast } from "react-toastify";
 import { getUserProfile } from "../services/UserService";
-import { BreadcrumbsWithIcon } from "../components/BeardScrumb";
+import { Card, Avatar, Typography, Descriptions, Spin } from "antd";
+
+const { Title, Text } = Typography;
 
 const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const token = useSelector((state) => state.user.token);
-
   const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (token) {
       getUserProfile(token)
-        .then((data) => setProfile(data))
+        .then((data) => {
+          setProfile(data);
+          setLoading(false);
+        })
         .catch(() => {
           toast.error("Không thể tải thông tin người dùng.");
+          setLoading(false);
         });
+    } else {
+      setLoading(false);
     }
   }, [token]);
 
   if (!token) {
     return (
       <div className="h-full flex justify-center items-center">
-        <p className="text-lg">Bạn chưa đăng nhập.</p>
+        <Text strong>Bạn chưa đăng nhập.</Text>
       </div>
     );
   }
 
-  if (!profile) {
+  if (loading || !profile) {
     return (
       <div className="h-full flex justify-center items-center">
-        <p className="text-lg">Đang tải thông tin...</p>
+        <Spin tip="Đang tải thông tin..." size="large" />
       </div>
     );
   }
 
   return (
-    <div className="relative overflow-x-auto sm:rounded-lg bg-white p-6 h-full">
-      <h1 className="text-2xl font-bold mb-6 px-4">My Profile</h1>
+    <div className="p-6 h-full">
+      <Title level={2}>Thông tin cá nhân</Title>
 
-      <div className="bg-white rounded-lg p-6 max-w-3xl mx-auto space-y-6">
-        <div className="flex items-center space-x-6">
-          <img
-            src={profile.image || Logo}
-            alt="Avatar"
-            className="w-40 h-40 rounded-full object-cover"
-          />
-          <div>
-            <h2 className="text-2xl font-semibold">
-              {profile.firstName} {profile.lastName}
-            </h2>
-
-            <p className="text-gray-700">{profile.email}</p>
-          </div>
-        </div>
-
-        <div className="flex space-x-4">
-          <div className="w-40 font-semibold text-gray-700">Ngày sinh:</div>
-          <div className="text-gray-800">
-            {profile.birthDate || "Chưa cập nhật"}
-          </div>
-        </div>
-        <div className="flex space-x-4">
-          <div className="w-40 font-semibold text-gray-700">Giới tính:</div>
-          <div className="capitalize text-gray-800">
-            {profile.gender || "Chưa cập nhật"}
-          </div>
-        </div>
-        <div className="flex space-x-4">
-          <div className="w-40 font-semibold text-gray-700">Nơi làm việc:</div>
-          <div className="capitalize text-gray-800">
-            {profile?.company?.address?.address},{" "}
-            {profile?.company?.address?.city}
-          </div>
-        </div>
-        <div className="flex space-x-4">
-          <div className="w-40 font-semibold text-gray-700">Địa chỉ nhà:</div>
-          <div className="capitalize text-gray-800">
-            {profile.address.address}, {profile.address.city}
-          </div>
+      <div className="flex items-center gap-6 mb-6">
+        <Avatar src={profile.image || Logo} size={96} alt="Avatar" />
+        <div>
+          <Title level={4} className="mb-0">
+            {profile.firstName} {profile.lastName}
+          </Title>
+          <Text type="secondary">{profile.email}</Text>
         </div>
       </div>
+
+      <Descriptions column={1} bordered size="small">
+        <Descriptions.Item label="Ngày sinh">
+          {profile.birthDate || "Chưa cập nhật"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Giới tính">
+          {profile.gender || "Chưa cập nhật"}
+        </Descriptions.Item>
+        <Descriptions.Item label="Nơi làm việc">
+          {profile?.company?.address?.address},{" "}
+          {profile?.company?.address?.city}
+        </Descriptions.Item>
+        <Descriptions.Item label="Địa chỉ nhà">
+          {profile?.address?.address}, {profile?.address?.city}
+        </Descriptions.Item>
+      </Descriptions>
     </div>
   );
 };

@@ -1,26 +1,24 @@
-import React, { useState, useRef, useEffect } from "react";
-import Logo from "../assets/Logo.png";
-import { BiMenu } from "react-icons/bi";
+import { Link } from "react-router-dom";
+import { Layout, Avatar, Dropdown, Menu, Button, Typography } from "antd";
+import {
+  MenuOutlined,
+  UserOutlined,
+  LogoutOutlined,
+  LoginOutlined,
+} from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import Logo from "../assets/Logo.png";
+import { toast } from "react-toastify";
+
+const { Header: AntHeader } = Layout;
+const { Text } = Typography;
 
 const Header = ({ onMenuClick }) => {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user.profile);
-  const avatarRef = useRef();
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (avatarRef.current && !avatarRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const handleLogout = () => {
     dispatch(logout());
@@ -33,59 +31,74 @@ const Header = ({ onMenuClick }) => {
     navigate("/login");
   };
 
+  const userMenu = (
+    <Menu>
+      <Menu.Item key="logout" icon={<LogoutOutlined />} onClick={handleLogout}>
+        Đăng xuất
+      </Menu.Item>
+    </Menu>
+  );
+
   return (
-    <div className="bg-cyan-200 w-full sticky top-0">
-      <div className="px-6 py-2">
-        <div className="flex items-center justify-between py-2">
-          <a className="flex items-center" href="/">
-            <img className="w-12 h-12 mr-2" src={Logo} alt="Logo" />
-            <span className="font-semibold text-lg">Mobile Shopping</span>
-          </a>
-
-          <div className="flex items-center space-x-4">
-            <div className="md:hidden">
-              <BiMenu
-                className="cursor-pointer"
-                size="1.875rem"
-                onClick={onMenuClick}
-                aria-label="Open menu"
-              />
-            </div>
-
-            <div className="relative" ref={avatarRef}>
-              {user ? (
-                <>
-                  <img
-                    className="w-12 h-12 rounded-full bg-white cursor-pointer"
-                    src={user?.image || Logo}
-                    alt="Avatar"
-                    onClick={() => setDropdownOpen((prev) => !prev)}
-                  />
-
-                  {dropdownOpen && (
-                    <div className="absolute right-0 mt-2 w-32 bg-white rounded shadow-lg py-2 z-50">
-                      <button
-                        onClick={handleLogout}
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                      >
-                        Logout
-                      </button>
-                    </div>
-                  )}
-                </>
-              ) : (
-                <button
-                  onClick={handleLogin}
-                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                >
-                  Login
-                </button>
-              )}
-            </div>
-          </div>
+    <AntHeader
+      style={{
+        backgroundColor: "#e0f7fa", // light cyan
+        padding: "0 24px",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        position: "sticky",
+        top: 0,
+        zIndex: 100,
+      }}
+    >
+      <Link to="/" style={{ textDecoration: "none", color: "inherit" }}>
+        <div
+          className="flex items-center cursor-pointer"
+          style={{ display: "flex", alignItems: "center", gap: 8 }}
+        >
+          <img src={Logo} alt="Logo" style={{ width: 40, height: 40 }} />
+          <h1
+            style={{
+              margin: 0,
+              fontSize: 18,
+              fontWeight: "bold",
+              textTransform: "uppercase",
+            }}
+          >
+            Mobile Shopping
+          </h1>
         </div>
+      </Link>
+
+      <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <Button
+          type="text"
+          icon={<MenuOutlined />}
+          onClick={onMenuClick}
+          className="md:hidden"
+        />
+
+        {user ? (
+          <Dropdown
+            overlay={userMenu}
+            placement="bottomRight"
+            trigger={["click"]}
+          >
+            <Avatar
+              src={user.image || Logo}
+              size="large"
+              style={{ cursor: "pointer", backgroundColor: "#fff" }}
+              icon={<UserOutlined />}
+            />
+          </Dropdown>
+        ) : (
+          <Button icon={<LoginOutlined />} type="primary" onClick={handleLogin}>
+            Login
+          </Button>
+        )}
       </div>
-    </div>
+    </AntHeader>
   );
 };
 

@@ -3,12 +3,16 @@ import { useDispatch } from "react-redux";
 import { addToCart } from "../redux/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Layout, Typography, Button } from "antd";
+
+const { Header, Content, Footer } = Layout;
+const { Title, Paragraph } = Typography;
 
 const RatingStars = React.memo(({ rating }) => {
   const stars = Array.from({ length: 5 }, (_, i) => (
-    <span key={i}>{i < Math.floor(rating) ? "⭐" : "☆"}</span>
+    <span key={i}>{i < Math.floor(rating) ? "⭐" : ""}</span>
   ));
-  return <div className="text-yellow-500 text-2xl">{stars}</div>;
+  return <div className="text-yellow-500 text-xl">{stars}</div>;
 });
 
 const ProductInfo = ({
@@ -37,34 +41,51 @@ const ProductInfo = ({
   };
 
   return (
-    <div className="space-y-4 ">
-      <h2 className="text-xl font-bold text-gray-800 py-4">{product.title}</h2>
+    <Layout
+      style={{
+        background: "transparent",
+        padding: 0,
+        border: "none",
+      }}
+    >
+      <Header style={{ background: "transparent", padding: 0 }}>
+        <Title level={4} style={{ margin: 0, color: "#1f1f1f" }}>
+          {product.title}
+        </Title>
+      </Header>
 
-      {showDescription && (
-        <p className="text-gray-600 text-sm">{product.description}</p>
-      )}
-
-      <div className="text-red-600 font-semibold text-lg">${product.price}</div>
-
-      <RatingStars rating={product.rating} />
+      <Content style={{ padding: " 0" }}>
+        {showDescription && (
+          <Paragraph type="secondary">{product.description}</Paragraph>
+        )}
+        <div style={{ color: "#e60023", fontWeight: "bold", fontSize: 16 }}>
+          ${product.price}
+        </div>
+        <RatingStars rating={product.rating} />
+      </Content>
 
       {showButtons && (
-        <div className="flex gap-2 mt-2 py-4">
-          <button
-            onClick={handleBuyNow}
-            className="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700 transition"
-          >
-            Mua ngay
-          </button>
-          <button
-            onClick={handleAddToCart}
-            className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-700 transition"
-          >
-            Thêm vào giỏ
-          </button>
-        </div>
+        <Footer style={{ background: "transparent", padding: "12px 0 0 0" }}>
+          <div style={{ display: "flex", gap: 8 }}>
+            <Button
+              style={{ background: "#f5222d", color: "#fff" }}
+              type="primary"
+              danger
+              onClick={handleBuyNow}
+            >
+              Mua ngay
+            </Button>
+            <Button
+              style={{ background: "#4CAF50", color: "#fff" }}
+              type="primary"
+              onClick={handleAddToCart}
+            >
+              Thêm vào giỏ
+            </Button>
+          </div>
+        </Footer>
       )}
-    </div>
+    </Layout>
   );
 };
 

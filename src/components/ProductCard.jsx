@@ -1,30 +1,41 @@
-import ProductInfo from "./ProductInfo";
+import React from "react";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../redux/cart/cartSlice";
 import { useNavigate } from "react-router-dom";
+import { Card, Button, Typography } from "antd";
+import { toast } from "react-toastify";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+const { Meta } = Card;
+const { Title } = Typography;
 
 const ProductCard = ({ product }) => {
   const navigate = useNavigate();
 
   return (
-    <div
-      onClick={() => navigate(`/product/${product.id}`)}
-      className="grid grid-cols-6 gap-4 p-4 border rounded-lg shadow-md hover:shadow-xl cursor-pointer bg-white"
-    >
-      <div className="col-span-3">
+    <Card
+      hoverable
+      style={{ width: "100%" }}
+      cover={
         <img
-          src={product.thumbnail || product.images?.[0]}
           alt={product.title}
-          className="w-full h-full object-cover rounded"
+          src={product.thumbnail || product.images?.[0]}
+          style={{ width: "100%", objectFit: "contain" }}
         />
-      </div>
+      }
+      onClick={() => navigate(`/product/${product.id}`)}
+    >
+      <Title level={5} ellipsis={{ rows: 1 }}>
+        {product.title}
+      </Title>
 
-      <div className="col-span-3">
-        <ProductInfo
-          product={product}
-          showDescription={false}
-          showButtons={true}
-        />
+      <div className="text-red-600 font-semibold">${product.price}</div>
+
+      <div style={{ fontSize: 16 }}>
+        {Array.from({ length: 5 }, (_, i) => (
+          <span key={i}>{i < Math.floor(product.rating) ? "⭐" : ""}</span>
+        ))}
       </div>
-    </div>
+    </Card>
   );
 };
 

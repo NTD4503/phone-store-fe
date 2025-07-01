@@ -1,12 +1,13 @@
-import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   removeFromCart,
   increaseQuantity,
   decreaseQuantity,
   clearCart,
+  updateQuantity,
 } from "../redux/cart/cartSlice";
-import { BreadcrumbsWithIcon } from "../components/BeardScrumb";
+import { Typography } from "antd";
+const { Title } = Typography;
 
 const Cart = () => {
   const cartItems = useSelector((state) => state.cart.items);
@@ -20,10 +21,9 @@ const Cart = () => {
   const grandTotal = total + vat;
 
   return (
-    <div className="relative overflow-x-auto sm:rounded-lg bg-white p-6 h-full">
-      <h1 className="text-2xl font-bold mb-6 px-4">Cart</h1>
+    <div className="relative overflow-x-auto sm:rounded-lg bg-white p-4 h-full">
       <div className="bg-white rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">Giỏ hàng của bạn</h2>
+        <Title level={2}>Giỏ hàng của bạn</Title>
         {cartItems.length === 0 ? (
           <p className="text-center mt-10 text-lg">Giỏ hàng trống.</p>
         ) : (
@@ -53,7 +53,27 @@ const Cart = () => {
                       >
                         -
                       </button>
-                      <span>{item.quantity}</span>
+
+                      <input
+                        min={1}
+                        step={1}
+                        value={item.quantity}
+                        onChange={(e) => {
+                          const value = parseInt(e.target.value, 10);
+
+                          if (
+                            !isNaN(value) &&
+                            value > 0 &&
+                            Number.isInteger(value)
+                          ) {
+                            dispatch(
+                              updateQuantity({ id: item.id, quantity: value })
+                            );
+                          }
+                        }}
+                        className="w-14 text-center border rounded"
+                      />
+
                       <button
                         onClick={() => dispatch(increaseQuantity(item.id))}
                         className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
