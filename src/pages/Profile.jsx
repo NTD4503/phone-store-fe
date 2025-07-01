@@ -50,34 +50,36 @@ const Profile = () => {
   }
 
   return (
-    <div className="p-6 h-full">
-      <Title level={2}>Thông tin cá nhân</Title>
+    <div className="relative overflow-x-auto sm:rounded-lg bg-white p-4 h-full">
+      <div className="bg-white rounded-lg p-6">
+        <Title level={2}>Thông tin cá nhân</Title>
 
-      <div className="flex items-center gap-6 mb-6">
-        <Avatar src={profile.image || Logo} size={96} alt="Avatar" />
-        <div>
-          <Title level={4} className="mb-0">
-            {profile.firstName} {profile.lastName}
-          </Title>
-          <Text type="secondary">{profile.email}</Text>
+        <div className="flex items-center gap-6 mb-6">
+          <Avatar src={profile.image || Logo} size={96} alt="Avatar" />
+          <div>
+            <Title level={4} className="mb-0">
+              {profile.firstName} {profile.lastName}
+            </Title>
+            <Text type="secondary">{profile.email}</Text>
+          </div>
         </div>
-      </div>
 
-      <Descriptions column={1} bordered size="small">
-        <Descriptions.Item label="Ngày sinh">
-          {profile.birthDate || "Chưa cập nhật"}
-        </Descriptions.Item>
-        <Descriptions.Item label="Giới tính">
-          {profile.gender || "Chưa cập nhật"}
-        </Descriptions.Item>
-        <Descriptions.Item label="Nơi làm việc">
-          {profile?.company?.address?.address},{" "}
-          {profile?.company?.address?.city}
-        </Descriptions.Item>
-        <Descriptions.Item label="Địa chỉ nhà">
-          {profile?.address?.address}, {profile?.address?.city}
-        </Descriptions.Item>
-      </Descriptions>
+        <Descriptions column={1} bordered size="small">
+          <Descriptions.Item label="Ngày sinh">
+            {profile.birthDate || "Chưa cập nhật"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Giới tính">
+            {profile.gender || "Chưa cập nhật"}
+          </Descriptions.Item>
+          <Descriptions.Item label="Nơi làm việc">
+            {profile?.company?.address?.address},{" "}
+            {profile?.company?.address?.city}
+          </Descriptions.Item>
+          <Descriptions.Item label="Địa chỉ nhà">
+            {profile?.address?.address}, {profile?.address?.city}
+          </Descriptions.Item>
+        </Descriptions>
+      </div>
     </div>
   );
 };

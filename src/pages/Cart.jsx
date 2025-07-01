@@ -20,6 +20,19 @@ const Cart = () => {
   const vat = total * 0.1;
   const grandTotal = total + vat;
 
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    return (
+      <div className="p-6 bg-white rounded-lg">
+        <Title level={2}>Giỏ hàng</Title>
+        <p className="text-lg mt-4 text-red-600">
+          Vui lòng đăng nhập để sử dụng giỏ hàng.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="relative overflow-x-auto sm:rounded-lg bg-white p-4 h-full">
       <div className="bg-white rounded-lg p-6">
