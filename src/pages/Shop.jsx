@@ -4,10 +4,14 @@ import ProductCard from "../components/ProductCard";
 import { Layout, Input, Button, Dropdown, Row, Col, Pagination } from "antd";
 import { FiFilter } from "react-icons/fi";
 import { debounce } from "lodash";
+import { fetchAllProductsThunk } from "../redux/product/productThunk";
+import { useDispatch, useSelector } from "react-redux";
 
 const { Header, Content } = Layout;
 
 const Shop = () => {
+  const dispatch = useDispatch();
+  const allProducts = useSelector((state) => state.product.allProducts);
   const [listProducts, setListProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchedProducts, setSearchedProducts] = useState([]);
@@ -23,17 +27,16 @@ const Shop = () => {
   const [ratingTo, setRatingTo] = useState("");
 
   useEffect(() => {
-    getAllProduct();
-  }, []);
-
-  const getAllProduct = async () => {
-    const res = await fetchAllProduct();
-    if (res && res.products) {
-      setListProducts(res.products);
-      setFilteredProducts(res.products);
-      setSearchedProducts(res.products);
+    if (allProducts.length === 0) {
+      dispatch(fetchAllProductsThunk());
     }
-  };
+  }, [dispatch, allProducts.length]);
+
+  useEffect(() => {
+    setListProducts(allProducts);
+    setFilteredProducts(allProducts);
+    setSearchedProducts(allProducts);
+  }, [allProducts]);
 
   const applyFilters = () => {
     let filtered = [...listProducts];

@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { fetchDetailProduct } from "../services/ProductService";
 import { useEffect, useState, memo } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchDetailProductThunk } from "../redux/product/productThunk";
 import { addToCart } from "../redux/cart/cartSlice";
 import { toast } from "react-toastify";
 import { Typography, Button, Layout } from "antd";
@@ -20,28 +20,21 @@ const DetailProduct = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [detailProduct, setDetailProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const token = localStorage.getItem("token");
+  const token = useSelector((state) => state.user.token);
+  const detailProduct = useSelector((state) => state.product.detailProduct);
+  const loading = useSelector((state) => state.product.loading);
 
   useEffect(() => {
-    getDetailProduct();
-  }, [id]);
+    dispatch(fetchDetailProductThunk(id));
+  }, [id, dispatch]);
 
-  const getDetailProduct = async () => {
-    try {
-      const res = await fetchDetailProduct(id);
-      setDetailProduct(res);
-      setSelectedImage(res.thumbnail || res.images?.[0]);
-    } catch (err) {
-      console.error("Lỗi khi fetch sản phẩm:", err);
+  useEffect(() => {
+    if (detailProduct) {
+      setSelectedImage(detailProduct.thumbnail || detailProduct.images?.[0]);
     }
-  };
-
-  const addProductToCart = () => {
-    dispatch(addToCart(detailProduct));
-  };
+  }, [detailProduct]);
 
   const handleAddToCart = (e) => {
     e.stopPropagation();
@@ -49,7 +42,7 @@ const DetailProduct = () => {
       toast.error("Vui lòng đăng nhập.");
       return;
     }
-    addProductToCart();
+    dispatch(addToCart(detailProduct));
     toast.success("Thêm vào giỏ thành công");
   };
 
@@ -59,12 +52,12 @@ const DetailProduct = () => {
       toast.error("Vui lòng đăng nhập.");
       return;
     }
-    addProductToCart();
+    dispatch(addToCart(detailProduct));
     toast.success("Đã thêm vào giỏ");
     navigate("/cart");
   };
 
-  if (!detailProduct) return <p>Đang tải dữ liệu...</p>;
+  if (loading || !detailProduct) return <p>Đang tải dữ liệu...</p>;
 
   return (
     <div className="relative overflow-x-auto sm:rounded-lg bg-white p-4 h-full">

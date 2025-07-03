@@ -20,7 +20,7 @@ const Cart = () => {
   const vat = total * 0.1;
   const grandTotal = total + vat;
 
-  const token = localStorage.getItem("token");
+  const token = useSelector((state) => state.user.token);
 
   if (!token) {
     return (

@@ -1,11 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { logout } from "../redux/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { fetchUserProfile } from "../redux/user/userThunk";
 import Logo from "../assets/Logo.png";
-import { toast } from "react-toastify";
-import { getUserProfile } from "../services/UserService";
-import { Card, Avatar, Typography, Descriptions, Spin } from "antd";
+import { Typography, Descriptions, Avatar, Spin, Alert } from "antd";
 
 const { Title, Text } = Typography;
 
@@ -13,38 +11,39 @@ const Profile = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const token = useSelector((state) => state.user.token);
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { token, profile, loading, error, isLoggedIn } = useSelector(
+    (state) => state.user
+  );
+  console.log("Profile component rendered", profile);
 
   useEffect(() => {
-    if (token) {
-      getUserProfile(token)
-        .then((data) => {
-          setProfile(data);
-          setLoading(false);
-        })
-        .catch(() => {
-          toast.error("Không thể tải thông tin người dùng.");
-          setLoading(false);
-        });
-    } else {
-      setLoading(false);
+    if (!token) {
+      navigate("/login", { replace: true });
+    } else if (!profile) {
+      dispatch(fetchUserProfile());
     }
-  }, [token]);
+  }, [token, profile, dispatch, navigate]);
 
-  if (!token) {
+  if (loading) {
     return (
       <div className="h-full flex justify-center items-center">
-        <Text strong>Bạn chưa đăng nhập.</Text>
+        <Spin tip="Đang tải thông tin..." size="large" />
       </div>
     );
   }
 
-  if (loading || !profile) {
+  if (error) {
     return (
       <div className="h-full flex justify-center items-center">
-        <Spin tip="Đang tải thông tin..." size="large" />
+        <Alert message="Lỗi" description={error} type="error" showIcon />
+      </div>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <div className="h-full flex justify-center items-center">
+        <Text strong>Bạn chưa đăng nhập.</Text>
       </div>
     );
   }

@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { handleLoginApi } from "../services/UserService";
-import { useDispatch } from "react-redux";
-import { setUser } from "../redux/user/userSlice";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../redux/user/userThunk";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -10,31 +9,22 @@ const Auth = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showPwd, setShowPwd] = useState(false);
-  const [errMsg, setErrMsg] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { loading, error, isLoggedIn } = useSelector((state) => state.user);
 
-  const handleLogin = async (e) => {
+  const handleLogin = (e) => {
     e.preventDefault();
-    setErrMsg("");
-    try {
-      const res = await handleLoginApi(username, password);
-      console.log("check login", res);
+    dispatch(loginUser({ username, password }));
+  };
 
-      const token = res.accessToken;
-      const user = res.user || res;
-
-      localStorage.setItem("token", token);
-
-      dispatch(setUser({ token, user }));
-
+  useEffect(() => {
+    if (isLoggedIn) {
       toast.success("Đăng nhập thành công");
       navigate("/");
-    } catch (err) {
-      setErrMsg(err.response?.data?.message || "Lỗi đăng nhập");
     }
-  };
+  }, [isLoggedIn, navigate]);
 
   return (
     <div className="min-h-screen flex justify-center items-center bg-gray-200 p-4">
@@ -75,13 +65,14 @@ const Auth = () => {
             </div>
           </div>
 
-          {errMsg && <p className="text-red-500 mb-4 text-sm">{errMsg}</p>}
+          {error && <p className="text-red-500 mb-4 text-sm">{error}</p>}
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
+            disabled={loading}
           >
-            Đăng nhập
+            {loading ? "Đang đăng nhập..." : "Đăng nhập"}
           </button>
         </form>
       </div>
